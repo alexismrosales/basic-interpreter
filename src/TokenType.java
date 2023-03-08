@@ -1,4 +1,6 @@
 public enum TokenType {
-    AND , CLASS,
+    //Operadores lógicos
+    AND , OR,
+    CLASS,
     EOF
 }
