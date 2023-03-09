@@ -12,9 +12,37 @@ public class Scanner {
     private static final Map<String, TokenType> reservedWords;
     static {
         reservedWords = new HashMap<>();
+        //Logic operators
         reservedWords.put("AND", TokenType.AND);
         reservedWords.put("OR", TokenType.OR);
-        reservedWords.put("CLASS", TokenType.CLASS);
+        //Identifier
+        reservedWords.put("id",TokenType.ID);
+        //Data type
+        reservedWords.put("number", TokenType.NUMBER);
+        reservedWords.put("string",TokenType.STR);
+        //Special words
+        reservedWords.put("class", TokenType.CLASS);
+        //Language signs
+        reservedWords.put("(", TokenType.LPAR);
+        reservedWords.put(")", TokenType.RPAR);
+        reservedWords.put("{", TokenType.LBRA);
+        reservedWords.put("}", TokenType.RBRA);
+        reservedWords.put(".",TokenType.FS);
+        reservedWords.put(",",TokenType.COMMA);
+        reservedWords.put(";",TokenType.SC);
+        reservedWords.put("-",TokenType.HYPHEN);
+        reservedWords.put("+",TokenType.PLUS);
+        reservedWords.put("*",TokenType.AST);
+        reservedWords.put("/",TokenType.SLASH);
+        reservedWords.put("!",TokenType.EXMA);
+        reservedWords.put("=",TokenType.EQUALS);
+        reservedWords.put("==",TokenType.EQUAL);
+        reservedWords.put("=!",TokenType.NEQUAL);
+        reservedWords.put("<",TokenType.LTHAN);
+        reservedWords.put(">",TokenType.GTHAN);
+        reservedWords.put("<=",TokenType.LTHANE);
+        reservedWords.put(">=",TokenType.GTHANE);
+        reservedWords.put("//",TokenType.COMM);
     }
 
     Scanner(String source){
@@ -23,33 +51,6 @@ public class Scanner {
 
     List<Token> scanTokens(){
 
-        int state = 0;
-        int beginning_lexeme = 0;
-
-        for(int i=0; i< source.length(); i++){
-            char c = source.charAt(i);
-
-            switch (state){
-                case 0:
-                    if(c=='{'){
-                        // Crear token y agregarlo a la lista
-
-                    }
-
-                    if(c=='1'|| c=='2'|| c=='3'){
-
-                        state = 13;
-                        beginning_lexeme = i;
-
-                    }
-
-
-                    break;
-                case 13:
-                    break;
-
-            }
-        }
         tokens.add(new Token(TokenType.EOF, "", null, line));
         return tokens;
     }
