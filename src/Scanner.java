@@ -42,7 +42,6 @@ public class Scanner {
         reservedWords.put(">",TokenType.GTHAN);
         reservedWords.put("<=",TokenType.LTHANE);
         reservedWords.put(">=",TokenType.GTHANE);
-        reservedWords.put("//",TokenType.COMM);
     }
 
     Scanner(String source){
