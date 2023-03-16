@@ -29,8 +29,5 @@ public enum TokenType {
     GTHAN, //-->Greater than >
     LTHANE, //-->Less than or equal operator <=
     GTHANE, //-->Great than or equal operator >=
-    COMM, //--> Comment //
-    LLCOMM, //-->Left large comment  /*
-    RLCOMM, //-->Right large comment */
     EOF
 }
