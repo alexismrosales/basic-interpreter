@@ -1,3 +1,4 @@
+import javax.swing.text.html.parser.Parser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,8 +50,9 @@ public class Scanner {
     }
 
     List<Token> scanTokens(){
-
-        tokens.add(new Token(TokenType.EOF, "", null, line));
+        //Instance of class
+        ParserAutomates parserAutomates = new ParserAutomates(source,line);
+        tokens = parserAutomates.mainAutomata(source,line);
         return tokens;
     }
 }
