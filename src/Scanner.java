@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 public class Scanner {
     private final String source;
-
     private final List<Token> tokens = new ArrayList<>();
-
     private int line = 1;
 
     private static final Map<String, TokenType> reservedWords;
