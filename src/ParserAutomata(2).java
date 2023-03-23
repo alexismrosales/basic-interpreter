@@ -2,7 +2,6 @@ import javax.swing.text.ElementIterator;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ParserAutomates
 {
     private final String source;//String to evaluate in automata
