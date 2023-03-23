@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 public class Scanner {
     private final String source;
-    private final List<Token> tokens = new ArrayList<>();
+    private List<Token> tokens = new ArrayList<>();
     private int line = 1;
 
     private static final Map<String, TokenType> reservedWords;
@@ -48,8 +48,8 @@ public class Scanner {
 
     List<Token> scanTokens(){
         //Instance of class
-        ParserAutomates parserAutomates = new ParserAutomates(source,line);
-        tokens = parserAutomates.mainAutomata(source,line);
+        ParserAutomata parserAutomata = new ParserAutomata(source,line);
+        tokens = parserAutomata.mainAutomata(source,line);
         return tokens;
     }
 }

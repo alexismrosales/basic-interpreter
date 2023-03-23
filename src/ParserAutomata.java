@@ -1,12 +1,11 @@
-import javax.swing.text.ElementIterator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParserAutomates
+public class ParserAutomata
 {
     private final String source;//String to evaluate in automata
     private final int line;
-    public ParserAutomates(String source, int line) { this.source = source; this.line = line; }
+    public ParserAutomata(String source, int line) { this.source = source; this.line = line; }
     List<Token> tokenNames =new ArrayList<>();
     int state = 0;
     int index_aux = 0;
@@ -34,14 +33,14 @@ public class ParserAutomates
         StringBuilder str = new StringBuilder();
 
         // We go through the string, position by position.
-        while (true)
+        while (start_lexeme <= source.length())
         {
             int end_lexeme = start_lexeme;
             // state = 0, we start in Q0
-                switch (state)
+            switch (state)
             {
                 case 0:
-                    character = sigCharacter(start_lexeme);
+                    character = nextCharacter(start_lexeme);
                     // If the first character of source is a symbol
                     if (isSymbol(symbols, character))
                     {
@@ -60,7 +59,7 @@ public class ParserAutomates
                     }
                     // ------- IN CASE OF SYMBOLS -------
                 case 1:
-                    character = sigCharacter(start_lexeme);
+                    character = nextCharacter(start_lexeme);
                     state = symbol_automata(character);
                     break;
                 case 2: // final state
@@ -98,7 +97,7 @@ public class ParserAutomates
                     state = 0;
                     start_lexeme++;
                     break;
-                    // ------- IN CASE OF DIGITS -------
+                // ------- IN CASE OF DIGITS -------
                 case 9:
                     list = digit_Q9(source, start_lexeme, list);
                     state = list.get(0);
@@ -130,14 +129,14 @@ public class ParserAutomates
                     start_lexeme = list.get(1);
                     break;
                 // final states of "digits"
-                case 15:
-                case 16:
+                case 15: break;
+                case 16: break;
                 case 17:
                     //tokenNames.add(new Token(TokenType.NUMBER, , null, line));
                     state = 0;
                     start_lexeme++;
                     break;
-                    // ------- IN CASE OF ID's OR STRINGS -------
+                // ------- IN CASE OF ID's OR STRINGS -------
                 case 18:
                     list = ID_ReservedWord(source,start_lexeme, end_lexeme, list);
                     // Get the final string or id
@@ -166,7 +165,7 @@ public class ParserAutomates
                     state = 0;
                     start_lexeme++;
                     break;
-                    // ------- IN CASE OF DELIM (BLANK SPACES) -------
+                // ------- IN CASE OF DELIM (BLANK SPACES) -------
                 case 22:
 
 
@@ -175,7 +174,7 @@ public class ParserAutomates
         return tokenNames;
     }
     // Return the character in start_lexeme position
-    public char sigCharacter(int start_lexeme)
+    public char nextCharacter(int start_lexeme)
     {
         char character;
         character = source.charAt(start_lexeme);
@@ -375,12 +374,13 @@ public class ParserAutomates
     // Determine if the input is an id
     public boolean isInHashMap(String idRword)
     {
-        /*
-        if (Scanner.reservedWords.containsKey(idRword))
-            return true;
-        else
-            return false;
-
-         */
+        for(TokenType tokenType : TokenType.values())
+        {
+            if(tokenType.name().equals(idRword))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
