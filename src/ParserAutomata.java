@@ -11,10 +11,10 @@ public class ParserAutomata
     int index_aux = 0;
     public List<Token> mainAutomata(String source, int line)
     {
+        source = source + "$";
         //Here begins the automata
         int start_lexeme = 0; // Pointer to character in source
         char character;
-
 
         //List of every type of token (characters included in alphabet)
         char[] symbols = {'(', ')', '{', '}', '.', ',', ';'};
@@ -30,12 +30,15 @@ public class ParserAutomata
             letter[k] = c;
 
         ArrayList<Integer> list = new ArrayList<>(); // list with the state and index lexeme when we have numbers (digits)
-        StringBuilder str = new StringBuilder();
+        StringBuilder str = new StringBuilder(); //  Save strings to print in the token
+        StringBuilder num = new StringBuilder(); // Save digits to print in the token
+
+        int sLexeme = 0; // pointer to know where the lexeme starts when printing
+        int end_lexeme = start_lexeme; // pointer to know where the lexeme ends when printing
 
         // We go through the string, position by position.
-        while (start_lexeme <= source.length())
+        while (start_lexeme < source.length()-1)
         {
-            int end_lexeme = start_lexeme;
             // state = 0, we start in Q0
             switch (state)
             {
@@ -50,6 +53,9 @@ public class ParserAutomata
                     //If the first character of source is a number
                     else if (Character.isDigit(character)) {
                         state = 9;  //Beginning of automata that evaluates the digits
+                        sLexeme = start_lexeme;
+                        System.out.println("state: " + state);
+                        System.out.println("index: " + start_lexeme);
                         break;
                     }
                     //If the character is a letter
@@ -99,19 +105,29 @@ public class ParserAutomata
                     break;
                 // ------- IN CASE OF DIGITS -------
                 case 9:
-                    list = digit_Q9(source, start_lexeme, list);
+                    list = digit_Q9(source, start_lexeme, end_lexeme, list);
                     state = list.get(0);
                     start_lexeme = list.get(1);
+                    /*System.out.println("state: " + state);
+                    System.out.println("index: " + sLexeme);
+                    System.out.println("end index: " + list.get(2));*/
                     break;
                 case 10:
-                    list = digit_Q10(source, start_lexeme, list);
+                    list = digit_Q10(source, start_lexeme, end_lexeme, list);
                     state = list.get(0);
                     start_lexeme = list.get(1);
+                    /*System.out.println("state: " + state);
+                    System.out.println("index: " + sLexeme);
+                    System.out.println("end index: " + list.get(2));*/
                     break;
                 case 11:
-                    list = digit_Q11(source, start_lexeme, list);
+                    list = digit_Q11(source, start_lexeme, end_lexeme, list);
                     state = list.get(0);
                     start_lexeme = list.get(1);
+
+                    System.out.println("state: " + state);
+                    System.out.println("index: " + start_lexeme);
+                    System.out.println("end index: " + list.get(2));
                     break;
                 case 12:
                     list = digit_Q12(source, start_lexeme, list);
@@ -129,12 +145,21 @@ public class ParserAutomata
                     start_lexeme = list.get(1);
                     break;
                 // final states of "digits"
-                case 15: break;
-                case 16: break;
+                case 15:
+                case 16:
                 case 17:
-                    //tokenNames.add(new Token(TokenType.NUMBER, , null, line));
+
+                    for (int i = sLexeme; i <= list.get(2); i++)
+                    {
+                       num.append(source.charAt(i));
+                    }
+                    String Num = num.toString();
+
+                    tokenNames.add(new Token(TokenType.NUMBER,Num, null, line));
                     state = 0;
                     start_lexeme++;
+                    System.out.println("state: " + state);
+                    System.out.println("index: " + start_lexeme);
                     break;
                 // ------- IN CASE OF ID's OR STRINGS -------
                 case 18:
@@ -161,7 +186,7 @@ public class ParserAutomata
                     start_lexeme++;
                     break;
                 case 21: // final state
-                    //tokenNames.add(new Token(TokenType.ID, , null, line));
+                    tokenNames.add(new Token(TokenType.ID,"id" , null, line));
                     state = 0;
                     start_lexeme++;
                     break;
@@ -171,6 +196,7 @@ public class ParserAutomata
 
             }
         }
+
         return tokenNames;
     }
     // Return the character in start_lexeme position
@@ -214,46 +240,48 @@ public class ParserAutomata
     }
 
     // Return the state and index of the next character when we are in state 9 (the first character is a digit) in a list
-    public ArrayList<Integer> digit_Q9(String source, int index, ArrayList<Integer> list)
+    public ArrayList<Integer> digit_Q9(String source, int index_initial, int index_final, ArrayList<Integer> list)
     {
         char character;
-        for (int i = index + 1; i <= source.length(); i++)
-        {
+        for (int i = index_initial + 1; i < source.length(); i++) {
             character = source.charAt(i); // assigning to 'character' the character of source in position i
-            if (!Character.isDigit(character)) // still state 9
+            if (Character.isDigit(character))
+                index_final++;
+            else if (character == '.') // Q10
             {
-                if (character == '.') // Q10
-                {
-                    state = 10;
-                    index_aux = i;
-                }
-                else if (character == 'E') // Q12
-                {
-                    state = 12;
-                    index_aux = i;
-                }
-                else // final state Q16
-                {
-                    state = 16;
-                    index_aux = i-1;
-                }
+                state = 10;
+                index_aux = i;
+                index_final++;
+                break;
+            } else if (character == 'E') // Q12
+            {
+                state = 12;
+                index_aux = i;
+                index_final++;
+                break;
+            } else // final state Q16
+            {
+                state = 16;
+                index_aux = i - 1;
                 break;
             }
         }
         list.add(0,state);
         list.add(1,index_aux);
+        list.add(2, index_final);
         return list;
     }
     // Return the state and index of the next character when we are in state 10 in a list
-    public ArrayList<Integer> digit_Q10(String source, int index, ArrayList<Integer> list)
+    public ArrayList<Integer> digit_Q10(String source, int index_initial, int index_final,ArrayList<Integer> list)
     {
         char character;
 
-        character = source.charAt(index + 1); // assigning to 'character' the character of source
+        character = source.charAt(index_initial + 1); // assigning to 'character' the character of source
 
         if (Character.isDigit(character)) { // Q11
             state = 11;
-            index_aux = index;
+            index_aux = index_initial + 1 ;
+            index_final++;
         }
         else // lexical error
         {
@@ -262,32 +290,35 @@ public class ParserAutomata
         }
         list.add(0, state);
         list.add(1, index_aux);
+        list.add(2, index_final);
         return list;
     }
     // Return the state and index of the next character when we are in state 11 in a list
-    public ArrayList<Integer> digit_Q11(String source, int index, ArrayList<Integer> list)
+    public ArrayList<Integer> digit_Q11(String source, int index_initial, int index_final, ArrayList<Integer> list)
     {
         char character;
-        for (int i = index + 1; i <= source.length(); i++)
+        for (int i = index_initial ; i < source.length(); i++)
         {
-            character = source.charAt(i); // assigning to 'character' the character of source in position i
-            if (!Character.isDigit(character)) // still state 9
+            character = source.charAt(i+1); // assigning to 'character' the character of source in position i
+            if (Character.isDigit(character))
+                index_final++;
+            else if (character == 'E') //Q12
             {
-                if (character == 'E') //Q12
-                {
-                    state = 12;
-                    index_aux = i;
-                }
-                else
-                {
-                    state = 17;
-                    index_aux = i - 1;
-                }
+                state = 12;
+                index_aux = i;
+                index_final++;
+                break;
+            }
+            else
+            {
+                state = 17;
+                index_aux = i ;
                 break;
             }
         }
         list.add(0,state);
         list.add(1,index_aux);
+        list.add(2,index_final);
         return list;
     }
     // Return the state and index of the next character when we are in state 12 in a list
