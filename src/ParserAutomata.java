@@ -39,6 +39,7 @@ public class ParserAutomata
         // We go through the string, position by position.
         while (start_lexeme < source.length() - 1)
         {
+            System.out.println(start_lexeme + "<" + (source.length()-1));
             // state = 0, we start in Q0
             switch (state)
             {
@@ -248,19 +249,19 @@ public class ParserAutomata
     {
 
         //Language symbols
-        if(character == '(') //Q2
+        if(character == '(') // Q2
             state = 2;
-        else if(character == ')') //Q3
+        else if(character == ')') // Q3
             state = 3;
-        else if(character == '{') //Q4
+        else if(character == '{') // Q4
             state = 4;
-        else if(character == '}') //Q5
+        else if(character == '}') // Q5
             state = 5;
-        else if(character == '.') //Q6
+        else if(character == '.') // Q6
             state = 6;
-        else if(character == ',') //Q7
+        else if(character == ',') // Q7
             state = 7;
-        else if(character == ';') //Q8
+        else if(character == ';') // Q8
             state = 8;
         return state;
     }
@@ -270,7 +271,7 @@ public class ParserAutomata
     {
         char character;
         for (int i = index_initial + 1; i < source.length(); i++) {
-            character = source.charAt(i); // assigning to 'character' the character of source in position i
+            character = source.charAt(i); // Assigning to 'character' the character of source in position i
             if (Character.isDigit(character))
                 index_final++;
             else if (character == '.') // Q10
@@ -287,7 +288,7 @@ public class ParserAutomata
                 index_final++;
                 break;
             }
-            else // final state Q16
+            else // Final state Q16
             {
                 state = 16;
                 index_aux = i - 1;
@@ -305,7 +306,7 @@ public class ParserAutomata
     {
         char character;
 
-        character = source.charAt(index_initial + 1); // assigning to 'character' the character of source
+        character = source.charAt(index_initial + 1); // Assigning to 'character' the character of source
 
         if (Character.isDigit(character)) { // Q11
             state = 11;
@@ -313,7 +314,7 @@ public class ParserAutomata
             index_final++;
             //System.out.println("Estado 10: " + index_final);
         }
-        else // lexical error
+        else // Lexical error
         {
             state = -1;
             index_aux = -1;
@@ -330,17 +331,17 @@ public class ParserAutomata
         char character;
         for (int i = index_initial + 1 ; i < source.length(); i++)
         {
-            character = source.charAt(i); // assigning to 'character' the character of source in position i
+            character = source.charAt(i); // Assigning to 'character' the character of source in position i
             if (Character.isDigit(character))
                 index_final++;
-            else if (character == 'E') //Q12
+            else if (character == 'E') // Q12
             {
                 state = 12;
                 index_aux = i;
                 index_final++;
                 break;
             }
-            else
+            else // Final state Q17
             {
                 state = 17;
                 index_aux = i -1 ;
@@ -368,7 +369,7 @@ public class ParserAutomata
             index_aux = index_initial;
             index_final++;
         }
-        else // lexical error
+        else // Lexical error
         {
             state = -1;
             index_aux = -1;
@@ -383,14 +384,14 @@ public class ParserAutomata
     {
         char character;
 
-        character = source.charAt(index_initial + 1); // assigning to 'character' the character of source
+        character = source.charAt(index_initial + 1); // Assigning to 'character' the character of source
 
         if (Character.isDigit(character)) { // Q14
             state = 14;
-            index_aux = index_initial;
+            index_aux = index_initial + 1;
             index_final++;
         }
-        else // lexical error
+        else // Lexical error
         {
             state = -1;
             index_aux = -1;
@@ -408,9 +409,14 @@ public class ParserAutomata
         for (int i = index_initial + 1; i <= source.length(); i++)
         {
             character = source.charAt(i); // Assigning to 'character' the character of source in position i
-            if (Character.isDigit(character) && Character.toString(character).equals("$"))
+            if (Character.isDigit(character)) // Still Q14
+            {
                 index_final++;
-            else
+                if(Character.toString(character).equals("$"))
+                    index_final--;
+            }
+
+            else // Final state Q15
             {
                 state = 15;
                 index_aux = i - 1;
