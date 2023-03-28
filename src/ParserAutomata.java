@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ParserAutomata
 {
@@ -11,15 +10,16 @@ public class ParserAutomata
     int index_aux = 0;
     int start_lexeme = 0; // Pointer to character in source
     int sLexeme = 0; // Pointer to know where the lexeme starts when printing
-    int end_lexeme = start_lexeme; // Pointer to know where the lexeme ends when printing
+    int end_lexeme = 0; // Pointer to know where the lexeme ends when printing
     public List<Token> mainAutomata(String source, int line)
     {
         source = source + "$"; // "$" is the character to indicate end of line
 
-        char character;
+        char character = 0;
 
         //List of every type of token (characters included in alphabet)
         char[] symbols = {'(', ')', '{', '}', '.', ',', ';'};
+        char[] operators = {'-','+','/','*','!','=','<','>'};
         char[] letter = new char[100];
         // Adding the alphabet accept to letter
         char c;
@@ -33,21 +33,23 @@ public class ParserAutomata
 
         ArrayList<Integer> list = new ArrayList<>(); // list with the state, starting index and final index of lexeme when we have numbers (digits)
         StringBuilder str = new StringBuilder(); //  Save strings to print in the token
+        StringBuilder strType = new StringBuilder();
         StringBuilder num = new StringBuilder(); // Save digits to print in the token
+        String idReword = ""; // Save ID or reserved word to print in the token
 
         // Here begins the automata
         // We go through the string, position by position.
         while (start_lexeme < source.length() - 1)
         {
-            System.out.println(start_lexeme + "<" + (source.length()-1));
             // state = 0, we start in Q0
             switch (state)
             {
                 case 0:
-                    character = nextCharacter(start_lexeme);
+                    character = source.charAt(start_lexeme);
                     sLexeme = start_lexeme;
+                    end_lexeme = start_lexeme;
                     // If the first character of source is a symbol
-                    if (isSymbol(symbols, character))
+                    if (isinArray(symbols, character))
                     {
                         state = 1;
                         break;
@@ -55,10 +57,6 @@ public class ParserAutomata
                     //If the first character of source is a number
                     else if (Character.isDigit(character)) {
                         state = 9;  // Beginning of automata that evaluates the digits
-
-                        System.out.println("state: " + state);
-                        System.out.println("index: " + sLexeme);
-                        System.out.println("end index: " + end_lexeme + "\n");
                         break;
                     }
                     //If the character is a letter
@@ -66,9 +64,30 @@ public class ParserAutomata
                         state = 18;
                         break;
                     }
+                    //If the character is a space
+                    else if(character == ' ' || character == '\n' || character == '\t')
+                    {
+                        state = 22;
+                        break;
+                    }
+                    //If the character is a string
+                    else if(character == '"')
+                    {
+                        state = 24;
+                        break;
+                    }
+                    //If the character is an operator
+                    else if (isinArray(operators, character))
+                    {
+                        state = 26;
+                        break;
+                    }
+                    else{
+                        state = -1;
+                    }
                     // ------- IN CASE OF SYMBOLS -------
                 case 1:
-                    character = nextCharacter(start_lexeme);
+                    character = source.charAt(start_lexeme);
                     state = symbol_automata(character);
                     break;
                 case 2: // final state
@@ -112,130 +131,266 @@ public class ParserAutomata
                     state = list.get(0);
                     start_lexeme = list.get(1);
                     end_lexeme = list.get(2);
-
-                    System.out.println("state: " + state);
-                    System.out.println("index: " + start_lexeme);
-                    System.out.println("end index: " + end_lexeme + "\n");
                     break;
                 case 10:
                     list = digit_Q10(source, start_lexeme, end_lexeme, list);
                     state = list.get(0);
                     start_lexeme = list.get(1);
                     end_lexeme = list.get(2);
-
-                    System.out.println("state: " + state);
-                    System.out.println("index: " + start_lexeme);
-                    System.out.println("end index: " + end_lexeme + "\n");
                     break;
                 case 11:
                     list = digit_Q11(source, start_lexeme, end_lexeme, list);
                     state = list.get(0);
                     start_lexeme = list.get(1);
                     end_lexeme = list.get(2);
-
-                    System.out.println("state: " + state);
-                    System.out.println("index: " + start_lexeme);
-                    System.out.println("end index: " + end_lexeme + "\n");
                     break;
                 case 12:
                     list = digit_Q12(source, start_lexeme, end_lexeme, list);
                     state = list.get(0);
                     start_lexeme = list.get(1);
                     end_lexeme = list.get(2);
-
-                    System.out.println("state: " + state);
-                    System.out.println("index: " + start_lexeme);
-                    System.out.println("end index: " + end_lexeme + "\n");
                     break;
                 case 13:
                     list = digit_Q13(source, start_lexeme, end_lexeme, list);
                     state = list.get(0);
                     start_lexeme = list.get(1);
                     end_lexeme = list.get(2);
-
-                    System.out.println("state: " + state);
-                    System.out.println("index: " + start_lexeme);
-                    System.out.println("end index: " + end_lexeme + "\n");
                     break;
                 case 14:
                     list = digit_Q14(source, start_lexeme, end_lexeme, list);
                     state = list.get(0);
                     start_lexeme = list.get(1);
                     end_lexeme = list.get(2);
-
-                    System.out.println("state: " + state);
-                    System.out.println("index: " + start_lexeme);
-                    System.out.println("end index: " + end_lexeme + "\n");
                     break;
                 // final states of "digits"
                 case 15:
                 case 16:
                 case 17:
+                    num.setLength(0);
                     for (int i = sLexeme; i <= end_lexeme ; i++) // Adding the corresponding characters to "num"
                     {
+                        if(source.charAt(i) == '$')
+                            break;
                        num.append(source.charAt(i));
                     }
                     String Num = num.toString(); // Converting num to a String
 
-                    tokenNames.add(new Token(TokenType.NUMBER,Num, null, line));
+                    tokenNames.add(new Token(TokenType.NUMBER,Num, Float.parseFloat(Num), line));
                     // We restart the values
                     state = 0;
                     start_lexeme++;
-                    end_lexeme = start_lexeme;
-
-                    System.out.println("state: " + state);
-                    System.out.println("index: " + start_lexeme);
-                    System.out.println("end index: " + end_lexeme);
                     break;
-                /* ------- IN CASE OF ID's OR STRINGS -------
+                // ------- IN CASE OF ID's OR STRINGS -------
                 case 18:
                     list = ID_ReservedWord(source,start_lexeme, end_lexeme, list);
+                    str.setLength(0);
                     // Get the final string or id
-                    for (int i = start_lexeme; i <= list.get(2); i++)
-                    {
+                    for (int i = sLexeme; i <= list.get(2); i++)
                         str.append(source.charAt(i));
-                    }
                     state = list.get(0);
                     start_lexeme = list.get(1);
+                    end_lexeme = list.get(2);
                     break;
                 case 19:
-                    // Call the function to find out if the input is a string or an identifier
-                    String idReword = str.toString();
-                    if(isInHashMap(idReword)) // Is a reserved word
-                        state = 20;
-                    else // Is an id
-                        state = 21;
+                    // Call the function to find out if the input is a string or an identifier (id)
+                    idReword = str.toString();
+                    if(isInHashMap(idReword))
+                        state = 20; // Is a reserved word
+                    else
+                        state = 21; // Is an id
                     break;
                 case 20: // final state
-                    //tokenNames.add(new Token(TokenType.RWORD, , null, line));
+
+                    tokenNames.add(new Token(getTokenType(idReword),idReword , null, line));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 21: // final state
-                    tokenNames.add(new Token(TokenType.ID,"id" , null, line));
+                    tokenNames.add(new Token(TokenType.ID,idReword, null, line));
                     state = 0;
                     start_lexeme++;
                     break;
                 // ------- IN CASE OF DELIM (BLANK SPACES) -------
                 case 22:
+                    //This is Q23
+                    if(source.charAt(start_lexeme++) != ' ' || source.charAt(start_lexeme) != '\n' || source.charAt(start_lexeme)== '\t')
+                        state = 0;
+                    break;
+                // ------- IN CASE OF STRING---------------------
+                case 24:
+                    if(source.charAt(start_lexeme+1) != '"'){
+                        strType.append(source.charAt(++start_lexeme));
+                    }
+                    else {
+                        state = 25;
+                        start_lexeme++;
+                    }
+                    break;
+                case 25:
+                    tokenNames.add(new Token(TokenType.STR, "\""+ strType.toString()+"\"", strType.toString(), line));
+                    strType.setLength(0);
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                // ------- IN CASE OF RELATIONAL OPERATORS-------
+                case 26: //Start of operators automata
+                    character = source.charAt(start_lexeme);
+                    state = oprel_automata(character);
+                    break;
+                case 27:
+                    tokenNames.add(new Token(TokenType.HYPHEN, "-", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case 28:
+                    tokenNames.add(new Token(TokenType.PLUS, "+", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case 29://Slash case /
+                    start_lexeme++;
+                    character = source.charAt(start_lexeme);
+                    if(character == '/') {
+                        state = 30;
+                        break;
+                    }
+                    else if(character == '*')
+                    {
+                        state = 31;
+                        break;
+                    }
+                    else{ //IF THERE IS OTHER CHARACTER
+                        // We restart the values
+                        state = 35;
+                        start_lexeme--;
+                    }
+                    break;
+                case 30:
+                    if(source.charAt(start_lexeme++) == '\n')
+                        state = 0;
+                    break;
+                case 31:
+                    start_lexeme++;
+                    while(true) {
+                        if(source.charAt(start_lexeme) == '$'){
+                            tokenNames=Error("COMMENT IS NOT CLOSED");
+                            return tokenNames;
+                        }
+                        if (start_lexeme <= source.length() - 1) {
+                            if (source.charAt(start_lexeme) == '*' && source.charAt(start_lexeme + 1) == '/') {
+                                state = 0;
+                                start_lexeme += 2;
+                                break;
+                            } else //Q34
+                                start_lexeme++;
+                        }
+                    }
+                    break;
+                case 35:
+                    tokenNames.add(new Token(TokenType.SLASH, "/", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
 
-                 */
+                case 36:
+                    if(source.charAt(start_lexeme+1) == '/')
+                    {
+                        tokenNames=Error("COMMENT IS NOT INITIALIZED");
+                        return tokenNames;
+                    }
+                    else{
+                        state = 37;
+                    }
+                    break;
 
+                case 37:
+                    tokenNames.add(new Token(TokenType.AST, "*", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case 38:
+                    if(source.charAt(start_lexeme+1) == '=')
+                    {
+                        state = 39;
+                        start_lexeme++;
+                    }
+                    else{
+                        state = 40;
+                    }
+                    break;
+                case 39:
+                    tokenNames.add(new Token(TokenType.NEQUAL, "!=", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case 40:
+                    tokenNames.add(new Token(TokenType.EXMA, "!", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case 41:
+                    if(source.charAt(start_lexeme+1) == '=')
+                    {
+                        state = 42;
+                        start_lexeme++;
+                    }
+                    else{
+                        state = 43;
+                    }
+                case 42:
+                    tokenNames.add(new Token(TokenType.EQUALS, "==", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case 43:
+                    tokenNames.add(new Token(TokenType.EQUAL, "=", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case 44:
+                    if(source.charAt(start_lexeme+1)=='=') {
+                        state = 45;
+                        start_lexeme++;
+                    }else
+                        state = 46;
+                    break;
+                case 45:
+                    tokenNames.add(new Token(TokenType.LTHANE, "<=", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case 46:
+                    tokenNames.add(new Token(TokenType.LTHAN, "<", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case 47:
+                    if(source.charAt(start_lexeme+1)=='=') {
+                        state = 48;
+                        start_lexeme++;
+                    }else
+                        state = 49;
+                    break;
+                case 48:
+                    tokenNames.add(new Token(TokenType.GTHANE, ">=", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case 49:
+                    tokenNames.add(new Token(TokenType.GTHAN, ">", null, line));
+                    state = 0;
+                    start_lexeme++;
+                    break;
+                case -1:
+                    tokenNames = Error("INVALID SYNTAX, "+ source.charAt(start_lexeme)+ " IS NOT VALID");
+                    return tokenNames;
             }
         }
 
         return tokenNames;
     }
-    // Return the character in start_lexeme position
-    public char nextCharacter(int start_lexeme)
-    {
-        char character;
-        character = source.charAt(start_lexeme);
-        return character;
-    }
-
-    // Determine if a character is a symbol
-    public boolean isSymbol(char[] array, char character)
+    // Determine if a character is a list
+    public boolean isinArray(char[] array, char character)
     {
         for (char c : array) {
             if (character == c)
@@ -295,7 +450,6 @@ public class ParserAutomata
                 break;
             }
         }
-        //System.out.println("Estado 9: " + index_aux);
         list.add(0,state);
         list.add(1,index_aux);
         list.add(2, index_final);
@@ -312,12 +466,10 @@ public class ParserAutomata
             state = 11;
             index_aux = index_initial + 1 ;
             index_final++;
-            //System.out.println("Estado 10: " + index_final);
         }
         else // Lexical error
         {
             state = -1;
-            index_aux = -1;
         }
 
         list.add(0, state);
@@ -366,7 +518,7 @@ public class ParserAutomata
         else if (Character.isDigit(character)) // Q14
         {
             state = 14;
-            index_aux = index_initial;
+            index_aux = index_initial+1;
             index_final++;
         }
         else // Lexical error
@@ -394,7 +546,6 @@ public class ParserAutomata
         else // Lexical error
         {
             state = -1;
-            index_aux = -1;
         }
         list.add(0, state);
         list.add(1, index_aux);
@@ -431,12 +582,16 @@ public class ParserAutomata
     public ArrayList<Integer> ID_ReservedWord(String source, int index_initial, int index_final, ArrayList<Integer> list)
     {
         char character;
-        character = source.charAt(index_initial + 1);
+
         for (int i = index_initial + 1 ; i <= source.length(); i++)
         {
-            if (Character.isLetterOrDigit(character))
+            character = source.charAt(i);
+            if (Character.isLetterOrDigit(character)) {
                 index_final++;
-            else
+                if(Character.toString(character).equals("$"))
+                    index_final--;
+            }
+                else
             {
                 state = 19;
                 index_aux = i - 1;
@@ -451,13 +606,38 @@ public class ParserAutomata
     // Determine if the input is an id
     public boolean isInHashMap(String idRword)
     {
-        for(TokenType tokenType : TokenType.values())
-        {
-            if(tokenType.name().equals(idRword))
-            {
-                return true;
-            }
-        }
-        return false;
+        TokenType tokenType = Scanner.reservedWords.get(idRword);
+        return tokenType != null;
     }
+    public int oprel_automata(char character)
+    {
+        //Relational operators
+        if(character == '-') // Q2
+            state = 27;
+        else if(character == '+') // Q3
+            state = 28;
+        else if(character == '/') // Q4
+            state = 29;
+        else if(character == '*') // Q5
+            state = 36;
+        else if(character == '!') // Q6
+            state = 38;
+        else if(character == '=') // Q7
+            state = 41;
+        else if(character == '<') // Q8
+            state = 44;
+        else if(character == '>') // Q8
+            state = 47;
+        return state;
+    }
+    private List<Token> Error(String messageError)
+    {
+        List<Token> tokenError =new ArrayList<>();
+        tokenError.add(new Token(TokenType.ERROR,messageError,null,line));
+        return tokenError;
+    }
+    public TokenType getTokenType(String idRword) {
+        return Scanner.reservedWords.get(idRword);
+    }
+
 }

@@ -20,6 +20,7 @@ public class Interpreter {
     }
     private static void execFile(String path) throws IOException{
         byte[] bytes = Files.readAllBytes(Paths.get(path));
+
         exec(new String(bytes, Charset.defaultCharset()));
         //If there is an error
         if(error_exist) System.exit(65);

@@ -7,12 +7,12 @@ public class Scanner {
     private List<Token> tokens = new ArrayList<>();
     private int line = 1;
 
-    private static final Map<String, TokenType> reservedWords;
+    public static Map<String, TokenType> reservedWords;
     static {
         reservedWords = new HashMap<>();
         //Logic operators
-        reservedWords.put("AND", TokenType.AND);
-        reservedWords.put("OR", TokenType.OR);
+        reservedWords.put("and", TokenType.AND);
+        reservedWords.put("or", TokenType.OR);
         //Identifier
         reservedWords.put("id",TokenType.ID);
         //Data type
@@ -20,26 +20,15 @@ public class Scanner {
         reservedWords.put("string",TokenType.STR);
         //Special words
         reservedWords.put("class", TokenType.CLASS);
-        //Language signs
-        reservedWords.put("(", TokenType.LPAR);
-        reservedWords.put(")", TokenType.RPAR);
-        reservedWords.put("{", TokenType.LBRA);
-        reservedWords.put("}", TokenType.RBRA);
-        reservedWords.put(".",TokenType.FS);
-        reservedWords.put(",",TokenType.COMMA);
-        reservedWords.put(";",TokenType.SC);
-        reservedWords.put("-",TokenType.HYPHEN);
-        reservedWords.put("+",TokenType.PLUS);
-        reservedWords.put("*",TokenType.AST);
-        reservedWords.put("/",TokenType.SLASH);
-        reservedWords.put("!",TokenType.EXMA);
-        reservedWords.put("=",TokenType.EQUALS);
-        reservedWords.put("==",TokenType.EQUAL);
-        reservedWords.put("=!",TokenType.NEQUAL);
-        reservedWords.put("<",TokenType.LTHAN);
-        reservedWords.put(">",TokenType.GTHAN);
-        reservedWords.put("<=",TokenType.LTHANE);
-        reservedWords.put(">=",TokenType.GTHANE);
+        reservedWords.put("if", TokenType.IF);
+        reservedWords.put("else", TokenType.ELSE);
+        reservedWords.put("for", TokenType.FOR);
+        reservedWords.put("while", TokenType.WHILE);
+        reservedWords.put("true", TokenType.TRUE);
+        reservedWords.put("false", TokenType.FALSE);
+        reservedWords.put("return", TokenType.RETURN);
+        reservedWords.put("print",TokenType.PRINT);
+
     }
 
     Scanner(String source){
@@ -52,4 +41,5 @@ public class Scanner {
         tokens = parserAutomata.mainAutomata(source,line);
         return tokens;
     }
+
 }

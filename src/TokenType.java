@@ -2,6 +2,7 @@ public enum TokenType {
     //Logic operators
     AND,
     OR,
+    NOT,
     //Identifier
     ID,
     //Data type
@@ -29,5 +30,16 @@ public enum TokenType {
     GTHAN, //-->Greater than >
     LTHANE, //-->Less than or equal operator <=
     GTHANE, //-->Great than or equal operator >=
+    ERROR,
+    //RESERVED WORDS
+    IF,
+    ELSE,
+    FOR,
+    WHILE,
+    TRUE,
+    FALSE,
+    RETURN,
+    PRINT,
+
     EOF
 }
