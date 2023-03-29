@@ -228,7 +228,7 @@ public class ParserAutomata
                         if(source.charAt(start_lexeme+1) == '\n')
                             line++;
                         if(source.charAt(start_lexeme+1) == '$')
-                            tokenNames = Error("STRING IS NOT CLOSED IN LINE:"+get_line++,tokenNames);
+                            tokenNames = Error("STRING IS NOT CLOSED IN LINE:"+ get_line++,tokenNames);
                         strType.append(source.charAt(++start_lexeme));
                     }
                     else {
@@ -277,8 +277,10 @@ public class ParserAutomata
                     }
                     break;
                 case 30:
-                    if(source.charAt(start_lexeme++) == '\n')
+                    if(source.charAt(start_lexeme++) == '\n') {
                         state = 0;
+                        line++;
+                    }
                     break;
                 case 31:
                     start_lexeme++;
@@ -533,7 +535,6 @@ public class ParserAutomata
         else // Lexical error
         {
             state = -1;
-            index_aux = -1;
         }
         list.add(0, state);
         list.add(1, index_aux);
