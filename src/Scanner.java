@@ -13,12 +13,8 @@ public class Scanner {
         //Logic operators
         reservedWords.put("and", TokenType.AND);
         reservedWords.put("or", TokenType.OR);
-        //Identifier
-        reservedWords.put("id",TokenType.ID);
-        //Data type
-        reservedWords.put("number", TokenType.NUMBER);
-        reservedWords.put("string",TokenType.STR);
         //Special words
+        reservedWords.put("fun", TokenType.CLASS);
         reservedWords.put("class", TokenType.CLASS);
         reservedWords.put("if", TokenType.IF);
         reservedWords.put("else", TokenType.ELSE);
@@ -28,7 +24,9 @@ public class Scanner {
         reservedWords.put("false", TokenType.FALSE);
         reservedWords.put("return", TokenType.RETURN);
         reservedWords.put("print",TokenType.PRINT);
-
+        reservedWords.put("null", TokenType.NULL);
+        reservedWords.put("super", TokenType.SUPER);
+        reservedWords.put("var", TokenType.VAR);
     }
 
     Scanner(String source){

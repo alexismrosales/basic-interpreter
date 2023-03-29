@@ -40,6 +40,11 @@ public enum TokenType {
     FALSE,
     RETURN,
     PRINT,
+    NULL,
+    SUPER,
+    VAR,
+    THIS,
+
 
     EOF
 }

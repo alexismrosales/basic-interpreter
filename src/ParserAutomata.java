@@ -273,7 +273,7 @@ public class ParserAutomata
                     start_lexeme++;
                     while(true) {
                         if(source.charAt(start_lexeme) == '$'){
-                            tokenNames=Error("COMMENT IS NOT CLOSED");
+                            tokenNames=Error("COMMENT IS NOT CLOSED", tokenNames);
                             return tokenNames;
                         }
                         if (start_lexeme <= source.length() - 1) {
@@ -295,7 +295,7 @@ public class ParserAutomata
                 case 36:
                     if(source.charAt(start_lexeme+1) == '/')
                     {
-                        tokenNames=Error("COMMENT IS NOT INITIALIZED");
+                        tokenNames=Error("COMMENT IS NOT INITIALIZED", tokenNames);
                         return tokenNames;
                     }
                     else{
@@ -331,12 +331,14 @@ public class ParserAutomata
                 case 41:
                     if(source.charAt(start_lexeme+1) == '=')
                     {
+
                         state = 42;
                         start_lexeme++;
                     }
-                    else{
+                    else
                         state = 43;
-                    }
+
+                    break;
                 case 42:
                     tokenNames.add(new Token(TokenType.EQUALS, "==", null, line));
                     state = 0;
@@ -382,10 +384,12 @@ public class ParserAutomata
                     start_lexeme++;
                     break;
                 case -1:
-                    tokenNames = Error("INVALID SYNTAX, "+ source.charAt(start_lexeme)+ " IS NOT VALID");
+                    tokenNames = Error("INVALID SYNTAX, "+ source.charAt(start_lexeme)+ " IS NOT VALID", tokenNames);
                     return tokenNames;
             }
         }
+
+        tokenNames.add(new Token(TokenType.EOF, "$", null, line));
 
         return tokenNames;
     }
@@ -630,9 +634,9 @@ public class ParserAutomata
             state = 47;
         return state;
     }
-    private List<Token> Error(String messageError)
+    private List<Token> Error(String messageError, List<Token> L)
     {
-        List<Token> tokenError =new ArrayList<>();
+        List<Token> tokenError = L;
         tokenError.add(new Token(TokenType.ERROR,messageError,null,line));
         return tokenError;
     }
