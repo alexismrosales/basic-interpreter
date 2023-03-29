@@ -36,8 +36,7 @@ public class Scanner {
     List<Token> scanTokens(){
         //Instance of class
         ParserAutomata parserAutomata = new ParserAutomata(source,line);
-        tokens = parserAutomata.mainAutomata(source,line);
-        return tokens;
+        return parserAutomata.mainAutomata(source,line);
     }
 
 }

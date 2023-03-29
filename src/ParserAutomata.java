@@ -11,6 +11,7 @@ public class ParserAutomata
     int start_lexeme = 0; // Pointer to character in source
     int sLexeme = 0; // Pointer to know where the lexeme starts when printing
     int end_lexeme = 0; // Pointer to know where the lexeme ends when printing
+    int get_line = 0; //Get the line of start of the start of a string
     public List<Token> mainAutomata(String source, int line)
     {
         source = source + "$"; // "$" is the character to indicate end of line
@@ -74,6 +75,7 @@ public class ParserAutomata
                     else if(character == '"')
                     {
                         state = 24;
+                        get_line = line;
                         break;
                     }
                     //If the character is an operator
@@ -125,7 +127,7 @@ public class ParserAutomata
                     state = 0;
                     start_lexeme++;
                     break;
-                // ------- IN CASE OF DIGITS -------
+                    // ------- IN CASE OF DIGITS -------
                 case 9:
                     list = digit_Q9(source, start_lexeme, end_lexeme, list);
                     state = list.get(0);
@@ -212,13 +214,21 @@ public class ParserAutomata
                     break;
                 // ------- IN CASE OF DELIM (BLANK SPACES) -------
                 case 22:
-                    //This is Q23
+                    if(source.charAt(start_lexeme) == '\n')
+                        line++;
+                    //This is Q23 // final state
                     if(source.charAt(start_lexeme++) != ' ' || source.charAt(start_lexeme) != '\n' || source.charAt(start_lexeme)== '\t')
+                    {
                         state = 0;
+                    }
                     break;
                 // ------- IN CASE OF STRING---------------------
                 case 24:
                     if(source.charAt(start_lexeme+1) != '"'){
+                        if(source.charAt(start_lexeme+1) == '\n')
+                            line++;
+                        if(source.charAt(start_lexeme+1) == '$')
+                            tokenNames = Error("STRING IS NOT CLOSED IN LINE:"+get_line++,tokenNames);
                         strType.append(source.charAt(++start_lexeme));
                     }
                     else {
@@ -226,7 +236,7 @@ public class ParserAutomata
                         start_lexeme++;
                     }
                     break;
-                case 25:
+                case 25: // final state
                     tokenNames.add(new Token(TokenType.STR, "\""+ strType.toString()+"\"", strType.toString(), line));
                     strType.setLength(0);
                     state = 0;
@@ -237,12 +247,12 @@ public class ParserAutomata
                     character = source.charAt(start_lexeme);
                     state = oprel_automata(character);
                     break;
-                case 27:
+                case 27: // final state
                     tokenNames.add(new Token(TokenType.HYPHEN, "-", null, line));
                     state = 0;
                     start_lexeme++;
                     break;
-                case 28:
+                case 28: // final state
                     tokenNames.add(new Token(TokenType.PLUS, "+", null, line));
                     state = 0;
                     start_lexeme++;
@@ -256,6 +266,7 @@ public class ParserAutomata
                     }
                     else if(character == '*')
                     {
+                        get_line = line;
                         state = 31;
                         break;
                     }
@@ -273,7 +284,7 @@ public class ParserAutomata
                     start_lexeme++;
                     while(true) {
                         if(source.charAt(start_lexeme) == '$'){
-                            tokenNames=Error("COMMENT IS NOT CLOSED", tokenNames);
+                            tokenNames=Error("COMMENT IS NOT CLOSED IN LINE: "+ get_line++, tokenNames);
                             return tokenNames;
                         }
                         if (start_lexeme <= source.length() - 1) {
@@ -281,29 +292,22 @@ public class ParserAutomata
                                 state = 0;
                                 start_lexeme += 2;
                                 break;
-                            } else //Q34
+                            } else //Q34 // final state
+                            {
+                                if(source.charAt(start_lexeme) == '\n')
+                                    line++;
                                 start_lexeme++;
+                            }
                         }
                     }
                     break;
-                case 35:
+                case 35: // final state
                     tokenNames.add(new Token(TokenType.SLASH, "/", null, line));
                     state = 0;
                     start_lexeme++;
                     break;
 
-                case 36:
-                    if(source.charAt(start_lexeme+1) == '/')
-                    {
-                        tokenNames=Error("COMMENT IS NOT INITIALIZED", tokenNames);
-                        return tokenNames;
-                    }
-                    else{
-                        state = 37;
-                    }
-                    break;
-
-                case 37:
+                case 36: // final state
                     tokenNames.add(new Token(TokenType.AST, "*", null, line));
                     state = 0;
                     start_lexeme++;
@@ -318,12 +322,12 @@ public class ParserAutomata
                         state = 40;
                     }
                     break;
-                case 39:
+                case 39: // final state
                     tokenNames.add(new Token(TokenType.NEQUAL, "!=", null, line));
                     state = 0;
                     start_lexeme++;
                     break;
-                case 40:
+                case 40: // final state
                     tokenNames.add(new Token(TokenType.EXMA, "!", null, line));
                     state = 0;
                     start_lexeme++;
@@ -339,12 +343,12 @@ public class ParserAutomata
                         state = 43;
 
                     break;
-                case 42:
+                case 42: // final state
                     tokenNames.add(new Token(TokenType.EQUALS, "==", null, line));
                     state = 0;
                     start_lexeme++;
                     break;
-                case 43:
+                case 43: // final state
                     tokenNames.add(new Token(TokenType.EQUAL, "=", null, line));
                     state = 0;
                     start_lexeme++;
@@ -356,12 +360,12 @@ public class ParserAutomata
                     }else
                         state = 46;
                     break;
-                case 45:
+                case 45: // final state
                     tokenNames.add(new Token(TokenType.LTHANE, "<=", null, line));
                     state = 0;
                     start_lexeme++;
                     break;
-                case 46:
+                case 46: // final state
                     tokenNames.add(new Token(TokenType.LTHAN, "<", null, line));
                     state = 0;
                     start_lexeme++;
@@ -373,24 +377,25 @@ public class ParserAutomata
                     }else
                         state = 49;
                     break;
-                case 48:
+                case 48: // final state
                     tokenNames.add(new Token(TokenType.GTHANE, ">=", null, line));
                     state = 0;
                     start_lexeme++;
                     break;
-                case 49:
+                case 49: // final state
                     tokenNames.add(new Token(TokenType.GTHAN, ">", null, line));
                     state = 0;
                     start_lexeme++;
                     break;
-                case -1:
-                    tokenNames = Error("INVALID SYNTAX, "+ source.charAt(start_lexeme)+ " IS NOT VALID", tokenNames);
+                case -1: // final state
+                    tokenNames = Error("INVALID SYNTAX, "+ source.charAt(start_lexeme)+ " IS NOT VALID IN LINE: "+line, tokenNames);
                     return tokenNames;
             }
         }
-
+        System.out.println("TOTAL LINES: "+line);
+        //End of line is added
         tokenNames.add(new Token(TokenType.EOF, "$", null, line));
-
+        //List of tokens is returned to class Scanner
         return tokenNames;
     }
     // Determine if a character is a list
@@ -616,21 +621,21 @@ public class ParserAutomata
     public int oprel_automata(char character)
     {
         //Relational operators
-        if(character == '-') // Q2
+        if(character == '-') // Q27
             state = 27;
-        else if(character == '+') // Q3
+        else if(character == '+') // 28
             state = 28;
-        else if(character == '/') // Q4
+        else if(character == '/') // 29
             state = 29;
-        else if(character == '*') // Q5
+        else if(character == '*') // 36
             state = 36;
-        else if(character == '!') // Q6
+        else if(character == '!') // Q38
             state = 38;
-        else if(character == '=') // Q7
+        else if(character == '=') // Q41
             state = 41;
-        else if(character == '<') // Q8
+        else if(character == '<') // Q44
             state = 44;
-        else if(character == '>') // Q8
+        else if(character == '>') // Q47
             state = 47;
         return state;
     }
