@@ -1,0 +1,5 @@
+int prueba;
+int i;
+int j = 2;
+for(int i = 0; i < n ;i++)
+	print("HOLA MUNDO")
