@@ -45,10 +45,12 @@ public class ParserAutomata
             // state = 0, we start in Q0
             switch (state)
             {
+
                 case 0:
                     character = source.charAt(start_lexeme);
                     sLexeme = start_lexeme;
                     end_lexeme = start_lexeme;
+
                     // If the first character of source is a symbol
                     if (isinArray(symbols, character))
                     {
@@ -66,7 +68,7 @@ public class ParserAutomata
                         break;
                     }
                     //If the character is a space
-                    else if(character == ' ' || character == '\n' || character == '\t')
+                    else if(character == ' ' || character == '\r'|| character == '\n' || character == '\t' )
                     {
                         state = 22;
                         break;
@@ -214,7 +216,8 @@ public class ParserAutomata
                     break;
                 // ------- IN CASE OF DELIM (BLANK SPACES) -------
                 case 22:
-                    if(source.charAt(start_lexeme) == '\n')
+
+                    if(source.charAt(start_lexeme) == '\r' && source.charAt(start_lexeme+1) == '\n')
                         line++;
                     //This is Q23 // final state
                     if(source.charAt(start_lexeme++) != ' ' || source.charAt(start_lexeme) != '\n' || source.charAt(start_lexeme)== '\t')
