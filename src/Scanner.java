@@ -14,7 +14,7 @@ public class Scanner {
         reservedWords.put("and", TokenType.AND);
         reservedWords.put("or", TokenType.OR);
         //Special words
-        reservedWords.put("fun", TokenType.CLASS);
+        reservedWords.put("fun", TokenType.FUN);
         reservedWords.put("class", TokenType.CLASS);
         reservedWords.put("if", TokenType.IF);
         reservedWords.put("else", TokenType.ELSE);
@@ -27,6 +27,7 @@ public class Scanner {
         reservedWords.put("null", TokenType.NULL);
         reservedWords.put("super", TokenType.SUPER);
         reservedWords.put("var", TokenType.VAR);
+        reservedWords.put("this", TokenType.THIS);
     }
 
     Scanner(String source){

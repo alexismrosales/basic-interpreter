@@ -95,37 +95,37 @@ public class ParserAutomata
                     state = symbol_automata(character);
                     break;
                 case 2: // final state
-                    tokenNames.add(new Token(TokenType.LPAR, "(", null, line));
+                    tokenNames.add(new Token(TokenType.LPAR, "(", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 3: // final state
-                    tokenNames.add(new Token(TokenType.RPAR, ")", null, line));
+                    tokenNames.add(new Token(TokenType.RPAR, ")", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 4: // final state
-                    tokenNames.add(new Token(TokenType.LBRA, "{", null, line));
+                    tokenNames.add(new Token(TokenType.LBRA, "{", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 5: // final state
-                    tokenNames.add(new Token(TokenType.RBRA, "}", null, line));
+                    tokenNames.add(new Token(TokenType.RBRA, "}", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 6: // final state
-                    tokenNames.add(new Token(TokenType.FS, ".", null, line));
+                    tokenNames.add(new Token(TokenType.FS, ".", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 7: // final state
-                    tokenNames.add(new Token(TokenType.COMMA, ",", null, line));
+                    tokenNames.add(new Token(TokenType.COMMA, ",", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme+=1;
                     break;
                 case 8: // final state
-                    tokenNames.add(new Token(TokenType.SC, ";", null, line));
+                    tokenNames.add(new Token(TokenType.SC, ";", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
@@ -179,7 +179,7 @@ public class ParserAutomata
                     }
                     String Num = num.toString(); // Converting num to a String
 
-                    tokenNames.add(new Token(TokenType.NUMBER,Num, Float.parseFloat(Num), line));
+                    tokenNames.add(new Token(TokenType.NUMBER,Num, Float.parseFloat(Num), line, start_lexeme+1));
                     // We restart the values
                     state = 0;
                     start_lexeme++;
@@ -205,12 +205,12 @@ public class ParserAutomata
                     break;
                 case 20: // final state
 
-                    tokenNames.add(new Token(getTokenType(idReword),idReword , null, line));
+                    tokenNames.add(new Token(getTokenType(idReword),idReword , null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 21: // final state
-                    tokenNames.add(new Token(TokenType.ID,idReword, null, line));
+                    tokenNames.add(new Token(TokenType.ID,idReword, null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
@@ -240,7 +240,7 @@ public class ParserAutomata
                     }
                     break;
                 case 25: // final state
-                    tokenNames.add(new Token(TokenType.STR, "\""+ strType.toString()+"\"", strType.toString(), line));
+                    tokenNames.add(new Token(TokenType.STR, "\""+ strType.toString()+"\"", strType.toString(), line, start_lexeme+1));
                     strType.setLength(0);
                     state = 0;
                     start_lexeme++;
@@ -251,12 +251,12 @@ public class ParserAutomata
                     state = oprel_automata(character);
                     break;
                 case 27: // final state
-                    tokenNames.add(new Token(TokenType.HYPHEN, "-", null, line));
+                    tokenNames.add(new Token(TokenType.HYPHEN, "-", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 28: // final state
-                    tokenNames.add(new Token(TokenType.PLUS, "+", null, line));
+                    tokenNames.add(new Token(TokenType.PLUS, "+", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
@@ -307,13 +307,13 @@ public class ParserAutomata
                     }
                     break;
                 case 35: // final state
-                    tokenNames.add(new Token(TokenType.SLASH, "/", null, line));
+                    tokenNames.add(new Token(TokenType.SLASH, "/", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
 
                 case 36: // final state
-                    tokenNames.add(new Token(TokenType.AST, "*", null, line));
+                    tokenNames.add(new Token(TokenType.AST, "*", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
@@ -328,12 +328,12 @@ public class ParserAutomata
                     }
                     break;
                 case 39: // final state
-                    tokenNames.add(new Token(TokenType.NEQUAL, "!=", null, line));
+                    tokenNames.add(new Token(TokenType.NEQUAL, "!=", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 40: // final state
-                    tokenNames.add(new Token(TokenType.EXMA, "!", null, line));
+                    tokenNames.add(new Token(TokenType.EXMA, "!", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
@@ -349,12 +349,12 @@ public class ParserAutomata
 
                     break;
                 case 42: // final state
-                    tokenNames.add(new Token(TokenType.EQUALS, "==", null, line));
+                    tokenNames.add(new Token(TokenType.EQUALS, "==", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 43: // final state
-                    tokenNames.add(new Token(TokenType.EQUAL, "=", null, line));
+                    tokenNames.add(new Token(TokenType.EQUAL, "=", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
@@ -366,12 +366,12 @@ public class ParserAutomata
                         state = 46;
                     break;
                 case 45: // final state
-                    tokenNames.add(new Token(TokenType.LTHANE, "<=", null, line));
+                    tokenNames.add(new Token(TokenType.LTHANE, "<=", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 46: // final state
-                    tokenNames.add(new Token(TokenType.LTHAN, "<", null, line));
+                    tokenNames.add(new Token(TokenType.LTHAN, "<", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
@@ -383,12 +383,12 @@ public class ParserAutomata
                         state = 49;
                     break;
                 case 48: // final state
-                    tokenNames.add(new Token(TokenType.GTHANE, ">=", null, line));
+                    tokenNames.add(new Token(TokenType.GTHANE, ">=", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
                 case 49: // final state
-                    tokenNames.add(new Token(TokenType.GTHAN, ">", null, line));
+                    tokenNames.add(new Token(TokenType.GTHAN, ">", null, line, start_lexeme+1));
                     state = 0;
                     start_lexeme++;
                     break;
@@ -399,7 +399,7 @@ public class ParserAutomata
         }
         System.out.println("TOTAL LINES: "+line);
         //End of line is added
-        tokenNames.add(new Token(TokenType.EOF, "$", null, line));
+        tokenNames.add(new Token(TokenType.EOF, "$", null, line, start_lexeme+1));
         //List of tokens is returned to class Scanner
         return tokenNames;
     }
@@ -646,7 +646,7 @@ public class ParserAutomata
     private List<Token> Error(String messageError, List<Token> L)
     {
         List<Token> tokenError = L;
-        tokenError.add(new Token(TokenType.ERROR,messageError,null,line));
+        tokenError.add(new Token(TokenType.ERROR,messageError,null,line, start_lexeme+1));
         return tokenError;
     }
     public TokenType getTokenType(String idRword) {

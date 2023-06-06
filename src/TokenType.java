@@ -32,6 +32,7 @@ public enum TokenType {
     GTHANE, //-->Great than or equal operator >=
     ERROR,
     //RESERVED WORDS
+    FUN,
     IF,
     ELSE,
     FOR,
