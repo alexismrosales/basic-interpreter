@@ -40,11 +40,27 @@ public class Interpreter {
     private static void exec(String source){
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
-        //for(Token token : tokens) {
-        //    System.out.println(token);
-        //}
+        /*for(Token token : tokens) {
+            System.out.println(token);
+        }*/
         Parser parser = new Parser(tokens);
-        parser.parse();
+        tokens = parser.parse();
+        if(tokens == null)
+        {
+            System.out.println("ERROR");
+        }
+        else
+        {
+            PostfixGenerator gpf =new PostfixGenerator(tokens);
+            List<Token> postfix = gpf.convertir();
+            /*for(Token token : postfix) {
+                System.out.println(token);
+            }*/
+            ASTGenerator gast = new ASTGenerator(postfix);
+            Tree program = gast.generateAST();
+            //program.print();
+            program.traverse();
+        }
 
     }
     static void error(int line, String message){

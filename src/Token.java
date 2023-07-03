@@ -36,4 +36,105 @@ public class Token {
     public String toString(){
         return type + " " + lexeme + " " + literal;
     }
+
+    //Auxiliar methods
+    public boolean isOperating(){
+        switch (this.type){
+            case ID:
+            case STR:
+            case FALSE:
+            case TRUE:
+            case NUMBER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isOperator(){
+        switch (this.type){
+            case PLUS:
+            case HYPHEN:
+            case AST:
+            case SLASH:
+            case EQUAL:
+            case GTHAN:
+            case GTHANE:
+            case LTHAN:
+            case LTHANE:
+            case NEQUAL:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isReservedWord(){
+        switch (this.type){
+            case VAR:
+            case IF:
+            case PRINT:
+            case ELSE:
+            case FOR:
+            case WHILE:
+            case AND:
+            case OR:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isControlStructure(){
+        switch (this.type){
+            case IF:
+            case ELSE:
+            case FOR:
+            case WHILE:
+                return true;
+            default:
+                return false;
+        }
+    }
+    public boolean isPrecedenceGTHANE(Token t){
+        return this.getPrecedence() >= t.getPrecedence();
+    }
+
+    private int getPrecedence(){
+        switch (this.type){
+            case AST:
+            case SLASH:
+                return 3;
+            case PLUS:
+            case HYPHEN:
+                return 2;
+            case EQUALS:
+            case GTHAN:
+            case GTHANE:
+            case LTHAN:
+            case LTHANE:
+            case NEQUAL:
+                return 1;
+        }
+
+        return 0;
+    }
+
+    public int arity(){
+        switch (this.type) {
+            case AST:
+            case SLASH:
+            case PLUS:
+            case HYPHEN:
+            case EQUAL:
+            case EQUALS:
+            case GTHAN:
+            case GTHANE:
+            case LTHAN:
+            case LTHANE:
+            case NEQUAL:
+                return 2;
+        }
+        return 0;
+    }
 }

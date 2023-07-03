@@ -9,7 +9,7 @@ public class Parser {
     private final Token FUN = new Token(TokenType.FUN,"fun");
     private final Token VAR = new Token(TokenType.VAR,"var");
     private final Token OR = new Token(TokenType.OR,"or");
-    private final Token AND = new Token(TokenType.OR,"and");
+    private final Token AND = new Token(TokenType.AND,"and");
 
     private final Token FOR = new Token(TokenType.FOR,"for");
     private final Token IF = new Token(TokenType.IF,"if");
@@ -53,15 +53,16 @@ public class Parser {
 
     Parser(List<Token> tokens) { this.tokens = tokens; }
 
-    public void parse() {
+    public List<Token> parse() {
         i = 0;
         preanalysis = tokens.get(i);
         PROGRAM();
         if (!error && !preanalysis.equals(end_string)) {
             System.out.println("ERROR IN POSITION " + preanalysis.position + " WAS NOT EXPECTED TOKEN : " + preanalysis.type);
         } else if (!error && preanalysis.equals(end_string)) {
-            System.out.println("VALID QUERY!");
+            return tokens;
         }
+        return null;
     }
     void PROGRAM()
     {
@@ -514,6 +515,7 @@ public class Parser {
     void BLOCK()
     {
         if(error) return;
+
         if(preanalysis.equals(LBRA))
         {
             BLOCK_DECL();

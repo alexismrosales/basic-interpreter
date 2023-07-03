@@ -179,7 +179,7 @@ public class ParserAutomata
                     }
                     String Num = num.toString(); // Converting num to a String
 
-                    tokenNames.add(new Token(TokenType.NUMBER,Num, Float.parseFloat(Num), line, start_lexeme+1));
+                    tokenNames.add(new Token(TokenType.NUMBER,Num, Double.parseDouble(Num), line, start_lexeme+1));
                     // We restart the values
                     state = 0;
                     start_lexeme++;
