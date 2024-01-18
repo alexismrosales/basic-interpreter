@@ -1,8 +1,12 @@
-# basic-interpreter
-1 - PARSER COMPLETE
+# Interprex 
+This is a basic interpreter where you can program some things.
 
-Group: 5CV3  
+```
+## Execution
+The program will execute the prompt when you run the interpreter file without any input.
+If theres an input file it has to be a text file and there will be an output.
+```
+example_text.txt 
+```
 
-Team partners:  
-  Márquez Rosales Jorge Alexis  
-  Muñoz Chávez Aranza Alondra
+
