@@ -19,7 +19,7 @@ You can create any type of variable using
 ```
     var your_var = your_value;
 ```
-data types like double, float, ints and strings are accepted.
+data types like double, float, int and string are accepted.
 
     
 ## Execution
