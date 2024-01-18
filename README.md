@@ -7,6 +7,4 @@ The program will execute the prompt when you run the interpreter file without an
 If theres an input file it has to be a text file and there will be an output.
 ```
 example_text.txt 
-```
-
 
