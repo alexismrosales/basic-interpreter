@@ -9,7 +9,7 @@ The program can accept different data structures like
 and can solve operations like
 <ul>
   <li>Sum</li>
-  <li>Multiplication/li>
+  <li>Multiplication</li>
   <li>Division</li>
   <li>Exponen</li>
 </ul>
