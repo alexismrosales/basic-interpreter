@@ -11,7 +11,7 @@ and can solve operations like
   <li>Sum</li>
   <li>Multiplication</li>
   <li>Division</li>
-  <li>Exponen</li>
+  <li>Exponent</li>
 </ul>
 
     
